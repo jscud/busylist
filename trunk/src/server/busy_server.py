@@ -59,7 +59,7 @@ class BusyRequestHandler(SimpleHTTPRequestHandler):
     return spreadsheets
 
   def SendSpreadsheetsList(self):
-    item_string = '{title:"%s",key:"%s"}'
+    item_string = '{"title":"%s","key":"%s"}'
     list_string = []
     spreadsheets = self.GetAllSpreadsheets()
     for item in spreadsheets:
