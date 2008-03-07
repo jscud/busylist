@@ -67,9 +67,19 @@ class BusyRequestHandler(SimpleHTTPRequestHandler):
     self.wfile.write('[%s]' % ','.join(list_string))
     
   def do_GET(self):
-    if self.path.startswith('/list'):
+    # JavaScript calls will be made to URLs which start with bin.
+    if self.path.startswith('/bin/list'): 
       self.SendSpreadsheetsList()
       return
+    # HTML and JavaScript files will be served out of the docs directory.
+    elif self.path == '/':
+      index_file = open('docs/index.html')
+      self.wfile.write(index_file.read())
+      return
+    else:
+      # Open the file pointed to by the path.
+      file_name = 'docs%s' % self.path
+      self.wfile.write(open(file_name).read())
     # TODO: the login page need to be completed to work with AuthSub.
     if self.path.startswith('/login'):
       token_present = False
