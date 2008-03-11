@@ -1,19 +1,26 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <script src="json.js"></script>
-    <script src="api.js"></script>
-    <style>
-      a:hover {color: red}
-    </style>
+	<title>Your List - Busy List</title>
+	<style type="text/css">
+		@import url(style.css);
+	</style>
+    <script src="json.js" type="text/javascript"></script>
+    <script src="api.js" type="text/javascript"></script>
   </head>
   <body>
-    <div id="display">Ready to fetch spreadsheets.</div>
-    <a onclick="busylist.getSpreadsheets()">Choose a spreadsheet.</a>
+	
+    <div id="status">Ready to fetch spreadsheets.</div>
+	<div id="getspreadsheetsbutton">
+    <button onclick="busylist.getSpreadsheets()">Choose a spreadsheet.</button></div>
+    <div id="display"></div>
     <div id="new_task">
       Description: <input type="text" id="new_description"/>
       Due: <input type="text" id="new_due"/>
       <button onclick="busylist.newTask();">Create Task</button>
     </div>
-    <a onclick="busylist.refreshTasks()">Refresh Task List</a>
+	<div id="refreshtasksbutton">
+    <button onclick="busylist.refreshTasks()">Refresh Task List</button>
+	</div>
   </body>
 </html>
