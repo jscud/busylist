@@ -69,15 +69,26 @@ busylist.getSpreadsheets = function() {
   display.innerHTML = 'made request';
 }
 
+busylist.getTasks = function(spreadsheetId) {
+  busylist.httpRequest('GET', null, '/bin/tasks/' + spreadsheetId, null, busylist.displayTasks);
+  // DEBUG:
+  var display = document.getElementById('display');
+  display.innerHTML = 'asked for notes';
+}
+
 busylist.displaySpreadsheets = function(data) {
   var spreadsheets = JSON.parse(data.responseText);
   var display = document.getElementById('display');
   var html = [];
   for (var i = 0; i < spreadsheets.length; i++) {
-    html.push('Title: ');
-    html.push(spreadsheets[i].title);
-    html.push(' Key: ');
+    html.push('Title: <a onclick="busylist.getTasks(\'');
     html.push(spreadsheets[i].key);
+    html.push('\');">');
+    html.push(spreadsheets[i].title);
+    //html.push(' Key: ');
+    //html.push(spreadsheets[i].key);
+    //html.push('<a onclick="">Get Notes</a>');
+    html.push('</a>');
     html.push('<br/>');
   }
   display.innerHTML = html.join('');
@@ -86,4 +97,18 @@ busylist.displaySpreadsheets = function(data) {
   //debug.innerHTML = 'got it!';
   //alert(data);
   //alert(data.responseText);
+}
+
+busylist.displayTasks = function(data) {
+  var collection = JSON.parse(data.responseText);
+  var display = document.getElementById('display');
+  var html = [];
+  for (var i = 0; i < collection.tasks.length; i++) {
+    html.push('Description: ');
+    html.push(collection.tasks[i].description);
+    html.push(', Due: ');
+    html.push(collection.tasks[i].due);
+    html.push('<br/>');
+  }
+  display.innerHTML = html.join('');
 }
