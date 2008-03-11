@@ -2,8 +2,18 @@
   <head>
     <script src="json.js"></script>
     <script src="api.js"></script>
+    <style>
+      a:hover {color: red}
+    </style>
   </head>
-  <body><div id="display">test</div>
-    <a onclick="busylist.getSpreadsheets()">Get Spreadsheets</a>
+  <body>
+    <div id="display">Ready to fetch spreadsheets.</div>
+    <a onclick="busylist.getSpreadsheets()">Choose a spreadsheet.</a>
+    <div id="new_task">
+      Description: <input type="text" id="new_description"/>
+      Due: <input type="text" id="new_due"/>
+      <button onclick="busylist.newTask();">Create Task</button>
+    </div>
+    <a onclick="busylist.refreshTasks()">Refresh Task List</a>
   </body>
 </html>

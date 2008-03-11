@@ -67,6 +67,12 @@ class BusyRequestHandler(SimpleHTTPRequestHandler):
     # Get the first 50 todo tasks.
     records = table.GetRecords(1, 50)
     return records
+
+  def CreateNewTask(self, fields):
+    db = self.db.GetDatabases(fields[0])[0]
+    table = db.GetTables(name='tasks')[0]
+    # Add a new record.
+    table.AddRecord({'description':fields[1], 'due':fields[2]})
     
   def SendSpreadsheetsList(self):
     item_string = '{"title":"%s","key":"%s"}'
@@ -88,6 +94,13 @@ class BusyRequestHandler(SimpleHTTPRequestHandler):
         '{"spreadsheet_id":"%s","tasks":%s}' % (
             spreadsheet_id, '[%s]' % (
                 ','.join(task_list))))
+
+  def SendNewTaskResponse(self, fields):
+    if len(fields) <= 3:
+      self.CreateNewTask(fields)
+      self.wfile.write('OK')
+    else:
+      self.wfile.write('Too few parameters.')
     
   def do_GET(self):
     # JavaScript calls will be made to URLs which start with bin.
@@ -120,7 +133,14 @@ class BusyRequestHandler(SimpleHTTPRequestHandler):
         print 'No token there'
       self.wfile.write('You are being logged in')
 
-   
+  def do_POST(self):
+    if self.path.startswith('/bin/newtask'):
+      data_length = int(self.headers.getheader('content-length'))
+      data = self.rfile.read(data_length)
+      # This parsing is temporary, we should use escaping on the post body.
+      self.SendNewTaskResponse(data.split('<@_@>'))
+  
+
 def StartServer(handler_class=BusyRequestHandler, 
     server_class=BusyHttpServer):
   server_address = ('', 2879)

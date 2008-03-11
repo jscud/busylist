@@ -15,7 +15,7 @@
  */
 
 // Namespace for BusyList JavaScript.
-var busylist = {}
+var busylist = {'spreadsheetId':''};
 
 /**
  * Makes an HTTP request and sets a callback to be called on state 4.
@@ -67,14 +67,41 @@ busylist.getSpreadsheets = function() {
   // DEBUG:
   var display = document.getElementById('display');
   display.innerHTML = 'made request';
-}
+};
 
 busylist.getTasks = function(spreadsheetId) {
-  busylist.httpRequest('GET', null, '/bin/tasks/' + spreadsheetId, null, busylist.displayTasks);
-  // DEBUG:
-  var display = document.getElementById('display');
-  display.innerHTML = 'asked for notes';
-}
+  // Set the spreadsheet id to be used in future requests.
+  busylist.spreadsheetId = spreadsheetId;
+  busylist.refreshTasks();
+};
+
+busylist.refreshTasks = function() {
+  if (busylist.spreadsheetId) {
+    busylist.httpRequest('GET', null, '/bin/tasks/' + busylist.spreadsheetId, 
+        null, busylist.displayTasks);
+    // DEBUG:
+    var display = document.getElementById('display');
+    display.innerHTML = 'asked for notes';
+  } else {
+    throw new Error('You must select a spreadsheet first.');
+  }
+};
+
+busylist.newTask = function() {
+  if (busylist.spreadsheetId) {
+    var display = document.getElementById('display');
+    var description = document.getElementById('new_description');
+    var due = document.getElementById('new_due');
+    // This postBody format is temporary, we should use escaping.
+    var postBody = [busylist.spreadsheetId, description.value, 
+        due.value].join('<@_@>');
+    busylist.httpRequest('POST', postBody, '/bin/newtask', 
+        null, busylist.taskCreated)
+    display.innerHTML = 'Sent new task to server.'
+  } else {
+    throw new Error('You must select a spreadsheet first.');
+  }
+};
 
 busylist.displaySpreadsheets = function(data) {
   var spreadsheets = JSON.parse(data.responseText);
@@ -85,19 +112,11 @@ busylist.displaySpreadsheets = function(data) {
     html.push(spreadsheets[i].key);
     html.push('\');">');
     html.push(spreadsheets[i].title);
-    //html.push(' Key: ');
-    //html.push(spreadsheets[i].key);
-    //html.push('<a onclick="">Get Notes</a>');
     html.push('</a>');
     html.push('<br/>');
   }
   display.innerHTML = html.join('');
-  // DEBUG
-  //var debug = document.getElementById('display');
-  //debug.innerHTML = 'got it!';
-  //alert(data);
-  //alert(data.responseText);
-}
+};
 
 busylist.displayTasks = function(data) {
   var collection = JSON.parse(data.responseText);
@@ -111,4 +130,17 @@ busylist.displayTasks = function(data) {
     html.push('<br/>');
   }
   display.innerHTML = html.join('');
-}
+};
+
+busylist.taskCreated = function(data) {
+  var display = document.getElementById('display');
+  if (data.responseText == 'OK') {
+    display.innerHTML = 'New Task Created';
+    // Update the list of tasks.
+    busylist.getTasks(busylist.spreadsheetId);
+  } else {
+    display.innerHTML = 'Unable to create new task';
+  }
+};
+
+
