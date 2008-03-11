@@ -65,7 +65,7 @@ busylist.getSpreadsheets = function() {
   busylist.httpRequest('GET', null, '/bin/list', null, 
       busylist.displaySpreadsheets);
   // DEBUG:
-  var display = document.getElementById('display');
+  var display = document.getElementById('status');
   display.innerHTML = 'made request';
 };
 
@@ -80,7 +80,7 @@ busylist.refreshTasks = function() {
     busylist.httpRequest('GET', null, '/bin/tasks/' + busylist.spreadsheetId, 
         null, busylist.displayTasks);
     // DEBUG:
-    var display = document.getElementById('display');
+    var display = document.getElementById('status');
     display.innerHTML = 'asked for notes';
   } else {
     throw new Error('You must select a spreadsheet first.');
@@ -89,7 +89,7 @@ busylist.refreshTasks = function() {
 
 busylist.newTask = function() {
   if (busylist.spreadsheetId) {
-    var display = document.getElementById('display');
+    var display = document.getElementById('status');
     var description = document.getElementById('new_description');
     var due = document.getElementById('new_due');
     // This postBody format is temporary, we should use escaping.
@@ -108,7 +108,7 @@ busylist.displaySpreadsheets = function(data) {
   var display = document.getElementById('display');
   var html = [];
   for (var i = 0; i < spreadsheets.length; i++) {
-    html.push('Title: <a onclick="busylist.getTasks(\'');
+    html.push('Title: <a href="#" onclick="busylist.getTasks(\'');
     html.push(spreadsheets[i].key);
     html.push('\');">');
     html.push(spreadsheets[i].title);
@@ -133,7 +133,7 @@ busylist.displayTasks = function(data) {
 };
 
 busylist.taskCreated = function(data) {
-  var display = document.getElementById('display');
+  var display = document.getElementById('status');
   if (data.responseText == 'OK') {
     display.innerHTML = 'New Task Created';
     // Update the list of tasks.
