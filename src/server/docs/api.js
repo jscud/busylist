@@ -122,13 +122,15 @@ busylist.displayTasks = function(data) {
   var collection = JSON.parse(data.responseText);
   var display = document.getElementById('display');
   var html = [];
+  	html.push('<table><tr><th>Description</th><th>Due</th></tr>');
   for (var i = 0; i < collection.tasks.length; i++) {
-    html.push('Description: ');
+    html.push('<tr><td>');
     html.push(collection.tasks[i].description);
-    html.push(', Due: ');
+    html.push('</td><td>');
     html.push(collection.tasks[i].due);
-    html.push('<br/>');
+    html.push('</td></tr>');
   }
+  	html.push('</table>');
   display.innerHTML = html.join('');
 };
 
