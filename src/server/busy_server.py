@@ -58,6 +58,16 @@ class BusyRequestHandler(SimpleHTTPRequestHandler):
       spreadsheets.append((entry.title.text, spreadsheet_key))
     return spreadsheets
 
+  def GetAllTasks(self, spreadsheet_id):
+    # For now we assume the spreadsheet has a worksheet named "tasks".
+    # In the future, we will allow users to select from multiple
+    # projects, each project represented by a worksheet.
+    db = self.db.GetDatabases(spreadsheet_id)[0]
+    table = db.GetTables(name='tasks')[0]
+    # Get the first 50 todo tasks.
+    records = table.GetRecords(1, 50)
+    return records
+    
   def SendSpreadsheetsList(self):
     item_string = '{"title":"%s","key":"%s"}'
     list_string = []
@@ -65,12 +75,28 @@ class BusyRequestHandler(SimpleHTTPRequestHandler):
     for item in spreadsheets:
       list_string.append(item_string % (item[0], item[1]))
     self.wfile.write('[%s]' % ','.join(list_string))
+
+  def SendTaskList(self, spreadsheet_id):
+    task_string = '{"description":"%s","due":"%s"}'
+    task_list = []
+    tasks = self.GetAllTasks(spreadsheet_id)
+    for item in tasks:
+      task_list.append(
+          task_string % (item.content['description'], 
+              item.content['due']))
+    self.wfile.write(
+        '{"spreadsheet_id":"%s","tasks":%s}' % (
+            spreadsheet_id, '[%s]' % (
+                ','.join(task_list))))
     
   def do_GET(self):
     # JavaScript calls will be made to URLs which start with bin.
     if self.path.startswith('/bin/list'): 
       self.SendSpreadsheetsList()
       return
+    elif self.path.startswith('/bin/tasks'):
+      spreadsheet_id = self.path.split('/')[3]
+      self.SendTaskList(spreadsheet_id)
     # HTML and JavaScript files will be served out of the docs directory.
     elif self.path == '/':
       index_file = open('docs/index.html')
