@@ -1,5 +1,5 @@
 #labels Phase-Testing,Revision-6
-Instructions for running the demo application as of revision 6.
+Instructions for running the demo application in revision 6.
 
 = Warning: Revision 6 is for testing purposes only. =
 
