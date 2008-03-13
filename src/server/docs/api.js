@@ -120,10 +120,12 @@ busylist.displaySpreadsheets = function(data) {
 
 busylist.displayTasks = function(data) {
   var collection = JSON.parse(data.responseText);
-  var display = document.getElementById('display');
+  var display = document.getElementById('todolist');
   var html = [];
   for (var i = 0; i < collection.tasks.length; i++) {
-    html.push('<tr><td>');
+    html.push('<tr>');
+    html.push('<td><input type="checkbox" /></td>');
+    html.push('<td>');
     html.push(collection.tasks[i].description);
     html.push('</td><td>');
     html.push(collection.tasks[i].due);

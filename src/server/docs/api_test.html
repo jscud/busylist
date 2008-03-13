@@ -15,13 +15,13 @@
     <button onclick="busylist.getSpreadsheets()">Choose a spreadsheet</button></div>
     <div id="spreadsheetlist"></div>
     <table>
-	    <thead><tr><th>Description</th><th>Due</th><th>Create</th></tr></thead>
+	    <thead><tr><th>&#9745;</th><th>Description</th><th>Due</th><th>Create</th></tr></thead>
 	    <tfoot id="new_task">
-	      <tr><td><input type="text" size="35" id="new_description" /></td>
+	      <tr><td></td><td><input type="text" size="35" id="new_description" /></td>
 	      <td><input type="text" size="12" id="new_due" /></td>
 	      <td><button onclick="busylist.newTask();">Create Task</button></td></tr>
 	    </tfoot>
-	    <tbody id="display"></tbody>
+	    <tbody id="todolist"></tbody>
     </table>
 	<div id="refreshtasksbutton">
     <button onclick="busylist.refreshTasks()">Refresh Task List</button>
