@@ -122,7 +122,6 @@ busylist.displayTasks = function(data) {
   var collection = JSON.parse(data.responseText);
   var display = document.getElementById('display');
   var html = [];
-  	// html.push('<table><tr><th>Description</th><th>Due</th></tr>');
   for (var i = 0; i < collection.tasks.length; i++) {
     html.push('<tr><td>');
     html.push(collection.tasks[i].description);
@@ -130,7 +129,6 @@ busylist.displayTasks = function(data) {
     html.push(collection.tasks[i].due);
     html.push('</td><td></td></tr>');
   }
-  	// html.push('</table>');
    display.innerHTML = html.join('');
 };
 
