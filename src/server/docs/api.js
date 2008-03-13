@@ -105,7 +105,7 @@ busylist.newTask = function() {
 
 busylist.displaySpreadsheets = function(data) {
   var spreadsheets = JSON.parse(data.responseText);
-  var display = document.getElementById('display');
+  var display = document.getElementById('spreadsheetlist');
   var html = [];
   for (var i = 0; i < spreadsheets.length; i++) {
     html.push('Title: <a href="#" onclick="busylist.getTasks(\'');
@@ -122,16 +122,16 @@ busylist.displayTasks = function(data) {
   var collection = JSON.parse(data.responseText);
   var display = document.getElementById('display');
   var html = [];
-  	html.push('<table><tr><th>Description</th><th>Due</th></tr>');
+  	// html.push('<table><tr><th>Description</th><th>Due</th></tr>');
   for (var i = 0; i < collection.tasks.length; i++) {
     html.push('<tr><td>');
     html.push(collection.tasks[i].description);
     html.push('</td><td>');
     html.push(collection.tasks[i].due);
-    html.push('</td></tr>');
+    html.push('</td><td></td></tr>');
   }
-  	html.push('</table>');
-  display.innerHTML = html.join('');
+  	// html.push('</table>');
+   display.innerHTML = html.join('');
 };
 
 busylist.taskCreated = function(data) {
